@@ -6,9 +6,13 @@ public class PlayerMovement : MonoBehaviour
 
     [Header("Speed")]
     [SerializeField]
-    private float speed;
+    private float walkSpeed;
+    [SerializeField]
+    private float duckSpeed;
     [SerializeField]
     private float jumpPower;
+    [SerializeField]
+    private float speedChangeTime;
 
     [Header("Height")]
     [SerializeField]
@@ -22,6 +26,8 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField]
     private LayerMask duckMask;
 
+    private float speed;
+    private float speedChange;
     private float height;
     private float refDuckVel;
 
@@ -76,9 +82,11 @@ public class PlayerMovement : MonoBehaviour
     private float Duck(){
         if(Input.GetKey(KeyCode.LeftControl)){
             height = Mathf.SmoothDamp(height, duckHeight, ref refDuckVel, changeTime);
+            speed = Mathf.SmoothDamp(speed, duckSpeed, ref speedChange, speedChangeTime);
         }else{
             if(!Physics.Raycast(transform.position, Vector3.up, out duckHit, defHeight * 2, duckMask)){
                 height = Mathf.SmoothDamp(height, defHeight, ref refDuckVel, changeTime);
+                speed = Mathf.SmoothDamp(speed, walkSpeed, ref speedChange, speedChangeTime);
             }
         }
         return height;
